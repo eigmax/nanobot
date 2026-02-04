@@ -10,9 +10,9 @@ use super::base::{object_schema, string_prop, Tool, ToolSchema};
 
 /// Expand ~ to home directory.
 fn expand_path(path: &str) -> PathBuf {
-    if path.starts_with("~/") {
+    if let Some(stripped) = path.strip_prefix("~/") {
         if let Some(home) = dirs::home_dir() {
-            return home.join(&path[2..]);
+            return home.join(stripped);
         }
     }
     PathBuf::from(path)
@@ -101,11 +101,7 @@ impl ReadFileTool {
         Ok(result.into())
     }
 
-    fn execute<'py>(
-        &self,
-        py: Python<'py>,
-        path: String,
-    ) -> PyResult<Bound<'py, PyAny>> {
+    fn execute<'py>(&self, py: Python<'py>, path: String) -> PyResult<Bound<'py, PyAny>> {
         let this = self.clone();
         future_into_py(py, async move {
             let mut params = HashMap::new();
@@ -259,10 +255,7 @@ impl Tool for EditFileTool {
             "old_text".into(),
             string_prop("The exact text to find and replace"),
         );
-        props.insert(
-            "new_text".into(),
-            string_prop("The text to replace with"),
-        );
+        props.insert("new_text".into(), string_prop("The text to replace with"));
         object_schema(props, vec!["path", "old_text", "new_text"])
     }
 }

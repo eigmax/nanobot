@@ -13,6 +13,7 @@ use std::path::PathBuf;
 /// Skills are markdown files (SKILL.md) that teach the agent how to use
 /// specific tools or perform certain tasks.
 #[pyclass]
+#[allow(dead_code)]
 pub struct SkillsLoader {
     workspace: PathBuf,
     workspace_skills: PathBuf,
@@ -83,10 +84,15 @@ impl SkillsLoader {
                                 if !seen_names.contains(&name.to_string()) {
                                     let dict = PyDict::new(py);
                                     dict.set_item("name", name)?;
-                                    dict.set_item("path", skill_file.to_string_lossy().to_string())?;
+                                    dict.set_item(
+                                        "path",
+                                        skill_file.to_string_lossy().to_string(),
+                                    )?;
                                     dict.set_item("source", "builtin")?;
 
-                                    if !filter_unavailable || self.check_requirements_for_skill(name) {
+                                    if !filter_unavailable
+                                        || self.check_requirements_for_skill(name)
+                                    {
                                         result.append(dict)?;
                                     }
                                 }
@@ -163,9 +169,15 @@ impl SkillsLoader {
             let skill_meta = self.get_skill_meta(&name);
             let available = self.check_requirements(&skill_meta);
 
-            lines.push(format!("  <skill available=\"{}\">", available.to_string().to_lowercase()));
+            lines.push(format!(
+                "  <skill available=\"{}\">",
+                available.to_string().to_lowercase()
+            ));
             lines.push(format!("    <name>{}</name>", escape_xml(&name)));
-            lines.push(format!("    <description>{}</description>", escape_xml(&desc)));
+            lines.push(format!(
+                "    <description>{}</description>",
+                escape_xml(&desc)
+            ));
             lines.push(format!("    <location>{}</location>", path));
 
             if !available {
@@ -193,9 +205,14 @@ impl SkillsLoader {
             let name: String = dict.get_item("name")?.unwrap().extract()?;
 
             if let Some(meta) = self.get_skill_metadata(&name) {
-                let skill_meta = parse_nanobot_metadata(meta.get("metadata").cloned().as_deref().unwrap_or(""));
-                if skill_meta.get("always").map(|v| v == "true").unwrap_or(false)
-                    || meta.get("always").map(|v| v == "true").unwrap_or(false) {
+                let skill_meta =
+                    parse_nanobot_metadata(meta.get("metadata").cloned().as_deref().unwrap_or(""));
+                if skill_meta
+                    .get("always")
+                    .map(|v| v == "true")
+                    .unwrap_or(false)
+                    || meta.get("always").map(|v| v == "true").unwrap_or(false)
+                {
                     result.push(name);
                 }
             }
@@ -218,7 +235,11 @@ impl SkillsLoader {
                 for line in frontmatter.lines() {
                     if let Some(idx) = line.find(':') {
                         let key = line[..idx].trim().to_string();
-                        let value = line[idx + 1..].trim().trim_matches('"').trim_matches('\'').to_string();
+                        let value = line[idx + 1..]
+                            .trim()
+                            .trim_matches('"')
+                            .trim_matches('\'')
+                            .to_string();
                         metadata.insert(key, value);
                     }
                 }

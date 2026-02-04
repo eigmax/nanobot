@@ -2,7 +2,7 @@
 
 use parking_lot::Mutex;
 use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyList};
+use pyo3::types::{PyDict, PyList, PyString};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs::{self, File};
@@ -52,7 +52,9 @@ impl Session {
         updated_at: Option<String>,
         metadata: Option<&Bound<'_, PyDict>>,
     ) -> PyResult<Self> {
-        let now = chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f").to_string();
+        let now = chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.6f")
+            .to_string();
 
         let msgs = if let Some(py_msgs) = messages {
             let mut result = Vec::new();
@@ -60,9 +62,7 @@ impl Session {
                 let dict = item.downcast::<PyDict>()?;
                 let role: String = dict
                     .get_item("role")?
-                    .ok_or_else(|| {
-                        PyErr::new::<pyo3::exceptions::PyKeyError, _>("missing 'role'")
-                    })?
+                    .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyKeyError, _>("missing 'role'"))?
                     .extract()?;
                 let content: String = dict
                     .get_item("content")?
@@ -122,7 +122,9 @@ impl Session {
         content: String,
         kwargs: Option<&Bound<'_, PyDict>>,
     ) -> PyResult<()> {
-        let now = chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f").to_string();
+        let now = chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.6f")
+            .to_string();
 
         let mut extra = HashMap::new();
         if let Some(kw) = kwargs {
@@ -165,7 +167,9 @@ impl Session {
     /// Clear all messages in the session.
     fn clear(&mut self) {
         self.messages.clear();
-        self.updated_at = chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f").to_string();
+        self.updated_at = chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.6f")
+            .to_string();
     }
 
     /// Get created_at timestamp.
@@ -217,6 +221,7 @@ impl Session {
 
 /// Manages conversation sessions.
 #[pyclass]
+#[allow(dead_code)]
 pub struct SessionManager {
     workspace: PathBuf,
     sessions_dir: PathBuf,
@@ -259,7 +264,9 @@ impl SessionManager {
     #[new]
     fn new(workspace: PathBuf) -> PyResult<Self> {
         let sessions_dir = dirs::home_dir()
-            .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>("Cannot find home directory"))?
+            .ok_or_else(|| {
+                PyErr::new::<pyo3::exceptions::PyRuntimeError, _>("Cannot find home directory")
+            })?
             .join(".nanobot")
             .join("sessions");
 
@@ -292,7 +299,9 @@ impl SessionManager {
         let session = match self.load(&key) {
             Ok(Some(s)) => s,
             Ok(None) => {
-                let now = chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f").to_string();
+                let now = chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.6f")
+                    .to_string();
                 Session {
                     key: key.clone(),
                     messages: Vec::new(),
@@ -303,7 +312,9 @@ impl SessionManager {
             }
             Err(_e) => {
                 // Log warning and create new session
-                let now = chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f").to_string();
+                let now = chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.6f")
+                    .to_string();
                 Session {
                     key: key.clone(),
                     messages: Vec::new(),
@@ -328,7 +339,10 @@ impl SessionManager {
         let path = self.get_session_path(&session.key);
 
         let mut file = File::create(&path).map_err(|e| {
-            PyErr::new::<pyo3::exceptions::PyIOError, _>(format!("Failed to create session file: {}", e))
+            PyErr::new::<pyo3::exceptions::PyIOError, _>(format!(
+                "Failed to create session file: {}",
+                e
+            ))
         })?;
 
         // Write metadata first
@@ -339,7 +353,10 @@ impl SessionManager {
             metadata: session.metadata.clone(),
         };
         let meta_json = serde_json::to_string(&metadata).map_err(|e| {
-            PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to serialize metadata: {}", e))
+            PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+                "Failed to serialize metadata: {}",
+                e
+            ))
         })?;
         writeln!(file, "{}", meta_json).map_err(|e| {
             PyErr::new::<pyo3::exceptions::PyIOError, _>(format!("Failed to write metadata: {}", e))
@@ -348,10 +365,16 @@ impl SessionManager {
         // Write messages
         for msg in &session.messages {
             let msg_json = serde_json::to_string(msg).map_err(|e| {
-                PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Failed to serialize message: {}", e))
+                PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+                    "Failed to serialize message: {}",
+                    e
+                ))
             })?;
             writeln!(file, "{}", msg_json).map_err(|e| {
-                PyErr::new::<pyo3::exceptions::PyIOError, _>(format!("Failed to write message: {}", e))
+                PyErr::new::<pyo3::exceptions::PyIOError, _>(format!(
+                    "Failed to write message: {}",
+                    e
+                ))
             })?;
         }
 
@@ -376,7 +399,10 @@ impl SessionManager {
         let path = self.get_session_path(&key);
         if path.exists() {
             fs::remove_file(&path).map_err(|e| {
-                PyErr::new::<pyo3::exceptions::PyIOError, _>(format!("Failed to delete session: {}", e))
+                PyErr::new::<pyo3::exceptions::PyIOError, _>(format!(
+                    "Failed to delete session: {}",
+                    e
+                ))
             })?;
             Ok(true)
         } else {
@@ -389,7 +415,10 @@ impl SessionManager {
         let result = PyList::empty(py);
 
         let entries = fs::read_dir(&self.sessions_dir).map_err(|e| {
-            PyErr::new::<pyo3::exceptions::PyIOError, _>(format!("Failed to read sessions directory: {}", e))
+            PyErr::new::<pyo3::exceptions::PyIOError, _>(format!(
+                "Failed to read sessions directory: {}",
+                e
+            ))
         })?;
 
         let mut sessions: Vec<(String, String, String, String)> = Vec::new();
@@ -501,14 +530,19 @@ impl SessionManager {
                         }
                     }
                 }
-                created_at = data.get("created_at").and_then(|v| v.as_str()).map(String::from);
+                created_at = data
+                    .get("created_at")
+                    .and_then(|v| v.as_str())
+                    .map(String::from);
             } else {
                 let msg: Message = serde_json::from_value(data).map_err(|e| e.to_string())?;
                 messages.push(msg);
             }
         }
 
-        let now = chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f").to_string();
+        let now = chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.6f")
+            .to_string();
 
         Ok(Some(Session {
             key: key.to_string(),
@@ -562,7 +596,9 @@ fn python_to_json(obj: Bound<'_, PyAny>) -> PyResult<serde_json::Value> {
 }
 
 /// Convert Python dict to HashMap<String, serde_json::Value>.
-fn python_dict_to_json_map(dict: &Bound<'_, PyDict>) -> PyResult<HashMap<String, serde_json::Value>> {
+fn python_dict_to_json_map(
+    dict: &Bound<'_, PyDict>,
+) -> PyResult<HashMap<String, serde_json::Value>> {
     let mut map = HashMap::new();
     for (k, v) in dict.iter() {
         let key: String = k.extract()?;
@@ -573,7 +609,7 @@ fn python_dict_to_json_map(dict: &Bound<'_, PyDict>) -> PyResult<HashMap<String,
 
 /// Convert JSON value to Python object.
 fn json_to_python(py: Python<'_>, value: &serde_json::Value) -> PyResult<PyObject> {
-    use pyo3::types::{PyBool, PyFloat, PyInt, PyString};
+    use pyo3::types::PyBool;
 
     match value {
         serde_json::Value::Null => Ok(py.None()),
@@ -590,9 +626,7 @@ fn json_to_python(py: Python<'_>, value: &serde_json::Value) -> PyResult<PyObjec
                 Ok(py.None())
             }
         }
-        serde_json::Value::String(s) => {
-            Ok(PyString::new(py, s).into_any().unbind())
-        }
+        serde_json::Value::String(s) => Ok(PyString::new(py, s).into_any().unbind()),
         serde_json::Value::Array(arr) => {
             let list = PyList::empty(py);
             for item in arr {

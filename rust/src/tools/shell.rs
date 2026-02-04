@@ -29,7 +29,10 @@ impl Tool for ExecTool {
 
     fn parameters(&self) -> HashMap<String, serde_json::Value> {
         let mut props = HashMap::new();
-        props.insert("command".into(), string_prop("The shell command to execute"));
+        props.insert(
+            "command".into(),
+            string_prop("The shell command to execute"),
+        );
         props.insert(
             "working_dir".into(),
             string_prop("Optional working directory for the command"),
@@ -58,9 +61,9 @@ impl ExecTool {
             .map(|s| s.as_str())
             .or(self.working_dir.as_deref())
             .map(|s| {
-                if s.starts_with("~/") {
+                if let Some(stripped) = s.strip_prefix("~/") {
                     if let Some(home) = dirs::home_dir() {
-                        return home.join(&s[2..]);
+                        return home.join(stripped);
                     }
                 }
                 PathBuf::from(s)

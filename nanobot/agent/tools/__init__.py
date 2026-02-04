@@ -7,26 +7,26 @@ from nanobot.agent.tools._registry_py import ToolRegistry
 # Try to use Rust implementations for core tools (faster)
 try:
     from nanobot_rust import (
+        EditFileTool,
+        ExecTool,
+        ListDirTool,
         ReadFileTool,
         WriteFileTool,
-        EditFileTool,
-        ListDirTool,
-        ExecTool,
     )
 except ImportError:
     # Fallback to pure Python
     from nanobot.agent.tools._filesystem_py import (
-        ReadFileTool,
-        WriteFileTool,
         EditFileTool,
         ListDirTool,
+        ReadFileTool,
+        WriteFileTool,
     )
     from nanobot.agent.tools._shell_py import ExecTool
 
 # These stay in Python (depend on Python callbacks/state)
-from nanobot.agent.tools.web import WebSearchTool, WebFetchTool
 from nanobot.agent.tools.message import MessageTool
 from nanobot.agent.tools.spawn import SpawnTool
+from nanobot.agent.tools.web import WebFetchTool, WebSearchTool
 
 __all__ = [
     "Tool",

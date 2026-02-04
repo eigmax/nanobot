@@ -49,9 +49,8 @@ impl MessageBus {
         let count = self.inbound_count.clone();
 
         future_into_py(py, async move {
-            tx.send(msg).map_err(|_| {
-                pyo3::exceptions::PyRuntimeError::new_err("Inbound queue closed")
-            })?;
+            tx.send(msg)
+                .map_err(|_| pyo3::exceptions::PyRuntimeError::new_err("Inbound queue closed"))?;
             count.fetch_add(1, Ordering::Relaxed);
             Ok(())
         })
@@ -86,9 +85,8 @@ impl MessageBus {
         let count = self.outbound_count.clone();
 
         future_into_py(py, async move {
-            tx.send(msg).map_err(|_| {
-                pyo3::exceptions::PyRuntimeError::new_err("Outbound queue closed")
-            })?;
+            tx.send(msg)
+                .map_err(|_| pyo3::exceptions::PyRuntimeError::new_err("Outbound queue closed"))?;
             count.fetch_add(1, Ordering::Relaxed);
             Ok(())
         })

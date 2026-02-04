@@ -72,7 +72,7 @@ pub trait Tool: Send + Sync {
         let params_obj = py
             .import("json")?
             .call_method1("loads", (params,))?
-            .into_py(py);
+            .unbind();
 
         Ok(ToolSchema {
             name: self.name().to_string(),
@@ -90,10 +90,7 @@ pub fn object_schema(
     let mut schema = HashMap::new();
     schema.insert("type".into(), serde_json::json!("object"));
     schema.insert("properties".into(), serde_json::json!(properties));
-    schema.insert(
-        "required".into(),
-        serde_json::json!(required),
-    );
+    schema.insert("required".into(), serde_json::json!(required));
     schema
 }
 

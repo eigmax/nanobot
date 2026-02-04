@@ -39,7 +39,12 @@ impl ContextBuilder {
 
     /// Build the system prompt from bootstrap files, memory, and skills.
     #[pyo3(signature = (skill_names=None))]
-    fn build_system_prompt(&self, py: Python<'_>, skill_names: Option<Vec<String>>) -> PyResult<String> {
+    #[allow(unused_variables)]
+    fn build_system_prompt(
+        &self,
+        py: Python<'_>,
+        skill_names: Option<Vec<String>>,
+    ) -> PyResult<String> {
         let mut parts = Vec::new();
 
         // Core identity
@@ -165,7 +170,9 @@ impl ContextBuilder {
 
 impl ContextBuilder {
     fn get_identity(&self) -> String {
-        let now = chrono::Local::now().format("%Y-%m-%d %H:%M (%A)").to_string();
+        let now = chrono::Local::now()
+            .format("%Y-%m-%d %H:%M (%A)")
+            .to_string();
         let workspace_path = self
             .workspace
             .canonicalize()

@@ -22,6 +22,7 @@ enum ToolType {
 }
 
 impl ToolType {
+    #[allow(dead_code)]
     fn name(&self) -> &str {
         match self {
             ToolType::ReadFile(t) => t.tool_name(),

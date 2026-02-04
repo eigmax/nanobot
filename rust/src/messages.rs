@@ -41,8 +41,9 @@ pub struct InboundMessage {
 impl InboundMessage {
     #[new]
     #[pyo3(signature = (channel, sender_id, chat_id, content, timestamp=None, media=None, metadata=None))]
+    #[allow(clippy::too_many_arguments)]
     fn new(
-        py: Python<'_>,
+        _py: Python<'_>,
         channel: String,
         sender_id: String,
         chat_id: String,
@@ -62,7 +63,7 @@ impl InboundMessage {
             let mut map = HashMap::new();
             for (key, value) in dict.iter() {
                 let key_str: String = key.extract()?;
-                map.insert(key_str, PyValue::new(value.into_py(py)));
+                map.insert(key_str, PyValue::new(value.unbind()));
             }
             map
         } else {
@@ -96,11 +97,11 @@ impl InboundMessage {
     }
 
     #[setter]
-    fn set_metadata(&mut self, py: Python<'_>, value: Bound<'_, PyDict>) -> PyResult<()> {
+    fn set_metadata(&mut self, _py: Python<'_>, value: Bound<'_, PyDict>) -> PyResult<()> {
         let mut map = HashMap::new();
         for (key, val) in value.iter() {
             let key_str: String = key.extract()?;
-            map.insert(key_str, PyValue::new(val.into_py(py)));
+            map.insert(key_str, PyValue::new(val.unbind()));
         }
         self.metadata = map;
         Ok(())
@@ -136,7 +137,7 @@ impl OutboundMessage {
     #[new]
     #[pyo3(signature = (channel, chat_id, content, reply_to=None, media=None, metadata=None))]
     fn new(
-        py: Python<'_>,
+        _py: Python<'_>,
         channel: String,
         chat_id: String,
         content: String,
@@ -148,7 +149,7 @@ impl OutboundMessage {
             let mut map = HashMap::new();
             for (key, value) in dict.iter() {
                 let key_str: String = key.extract()?;
-                map.insert(key_str, PyValue::new(value.into_py(py)));
+                map.insert(key_str, PyValue::new(value.unbind()));
             }
             map
         } else {
@@ -175,11 +176,11 @@ impl OutboundMessage {
     }
 
     #[setter]
-    fn set_metadata(&mut self, py: Python<'_>, value: Bound<'_, PyDict>) -> PyResult<()> {
+    fn set_metadata(&mut self, _py: Python<'_>, value: Bound<'_, PyDict>) -> PyResult<()> {
         let mut map = HashMap::new();
         for (key, val) in value.iter() {
             let key_str: String = key.extract()?;
-            map.insert(key_str, PyValue::new(val.into_py(py)));
+            map.insert(key_str, PyValue::new(val.unbind()));
         }
         self.metadata = map;
         Ok(())

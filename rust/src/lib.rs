@@ -14,9 +14,7 @@ use memory::MemoryStore;
 use messages::{InboundMessage, OutboundMessage};
 use session::{Session, SessionManager};
 use skills::SkillsLoader;
-use tools::{
-    EditFileTool, ExecTool, ListDirTool, ReadFileTool, ToolRegistry, WriteFileTool,
-};
+use tools::{EditFileTool, ExecTool, ListDirTool, ReadFileTool, ToolRegistry, WriteFileTool};
 
 /// Rust implementation of nanobot core modules.
 #[pymodule]
