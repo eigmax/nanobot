@@ -11,6 +11,8 @@ try:
         ExecTool,
         ListDirTool,
         ReadFileTool,
+        WebFetchTool,
+        WebSearchTool,
         WriteFileTool,
     )
 except ImportError:
@@ -22,11 +24,11 @@ except ImportError:
         WriteFileTool,
     )
     from nanobot.agent.tools._shell_py import ExecTool
+    from nanobot.agent.tools._web_py import WebFetchTool, WebSearchTool
 
 # These stay in Python (depend on Python callbacks/state)
 from nanobot.agent.tools.message import MessageTool
 from nanobot.agent.tools.spawn import SpawnTool
-from nanobot.agent.tools.web import WebFetchTool, WebSearchTool
 
 __all__ = [
     "Tool",

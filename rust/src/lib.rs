@@ -2,6 +2,8 @@ use pyo3::prelude::*;
 
 mod bus;
 mod context;
+mod cron;
+mod heartbeat;
 mod memory;
 mod messages;
 mod session;
@@ -10,11 +12,16 @@ mod tools;
 
 use bus::MessageBus;
 use context::ContextBuilder;
+use cron::{CronJob, CronJobState, CronPayload, CronSchedule, CronService};
+use heartbeat::HeartbeatService;
 use memory::MemoryStore;
 use messages::{InboundMessage, OutboundMessage};
 use session::{Session, SessionManager};
 use skills::SkillsLoader;
-use tools::{EditFileTool, ExecTool, ListDirTool, ReadFileTool, ToolRegistry, WriteFileTool};
+use tools::{
+    EditFileTool, ExecTool, ListDirTool, ReadFileTool, ToolRegistry, WebFetchTool, WebSearchTool,
+    WriteFileTool,
+};
 
 /// Rust implementation of nanobot core modules.
 #[pymodule]
@@ -31,6 +38,8 @@ fn nanobot_rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<EditFileTool>()?;
     m.add_class::<ListDirTool>()?;
     m.add_class::<ExecTool>()?;
+    m.add_class::<WebSearchTool>()?;
+    m.add_class::<WebFetchTool>()?;
 
     // Session classes
     m.add_class::<Session>()?;
@@ -42,6 +51,16 @@ fn nanobot_rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Skills and Context classes
     m.add_class::<SkillsLoader>()?;
     m.add_class::<ContextBuilder>()?;
+
+    // Heartbeat service
+    m.add_class::<HeartbeatService>()?;
+
+    // Cron service
+    m.add_class::<CronService>()?;
+    m.add_class::<CronJob>()?;
+    m.add_class::<CronSchedule>()?;
+    m.add_class::<CronPayload>()?;
+    m.add_class::<CronJobState>()?;
 
     Ok(())
 }

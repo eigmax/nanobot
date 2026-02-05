@@ -107,22 +107,14 @@ class TelegramChannel(BaseChannel):
         # Add message handler for text, photos, voice, documents
         self._app.add_handler(
             MessageHandler(
-                (
-                    filters.TEXT
-                    | filters.PHOTO
-                    | filters.VOICE
-                    | filters.AUDIO
-                    | filters.Document.ALL
-                )
-                & ~filters.COMMAND,
+                filters.TEXT
+                | filters.PHOTO
+                | filters.VOICE
+                | filters.AUDIO
+                | filters.Document.ALL,
                 self._on_message,
             )
         )
-
-        # Add /start command handler
-        from telegram.ext import CommandHandler
-
-        self._app.add_handler(CommandHandler("start", self._on_start))
 
         logger.info("Starting Telegram bot (polling mode)...")
 
@@ -162,30 +154,60 @@ class TelegramChannel(BaseChannel):
             return
 
         try:
-            # chat_id should be the Telegram chat ID (integer)
             chat_id = int(msg.chat_id)
-            # Convert markdown to Telegram HTML
-            html_content = _markdown_to_telegram_html(msg.content)
-            await self._app.bot.send_message(chat_id=chat_id, text=html_content, parse_mode="HTML")
         except ValueError:
             logger.error(f"Invalid chat_id: {msg.chat_id}")
-        except Exception as e:
-            # Fallback to plain text if HTML parsing fails
-            logger.warning(f"HTML parse failed, falling back to plain text: {e}")
-            try:
-                await self._app.bot.send_message(chat_id=int(msg.chat_id), text=msg.content)
-            except Exception as e2:
-                logger.error(f"Error sending Telegram message: {e2}")
-
-    async def _on_start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        """Handle /start command."""
-        if not update.message or not update.effective_user:
             return
 
-        user = update.effective_user
-        await update.message.reply_text(
-            f"👋 Hi {user.first_name}! I'm nanobot.\n\nSend me a message and I'll respond!"
-        )
+        # Telegram message limit is 4096 characters
+        max_len = 4000  # Leave some margin
+
+        # Convert markdown to Telegram HTML
+        html_content = _markdown_to_telegram_html(msg.content)
+
+        # Split into chunks if too long
+        chunks = self._split_message(html_content, max_len)
+
+        for chunk in chunks:
+            try:
+                await self._app.bot.send_message(chat_id=chat_id, text=chunk, parse_mode="HTML")
+            except Exception as e:
+                # Fallback to plain text if HTML parsing fails
+                logger.warning(f"HTML parse failed, falling back to plain text: {e}")
+                try:
+                    # Split plain text too
+                    plain_chunks = self._split_message(msg.content, max_len)
+                    for plain_chunk in plain_chunks:
+                        await self._app.bot.send_message(chat_id=chat_id, text=plain_chunk)
+                    break  # Don't continue with HTML chunks
+                except Exception as e2:
+                    logger.error(f"Error sending Telegram message: {e2}")
+                    break
+
+    def _split_message(self, text: str, max_length: int) -> list[str]:
+        """Split a message into chunks that fit Telegram's limit."""
+        if len(text) <= max_length:
+            return [text]
+
+        chunks = []
+        while text:
+            if len(text) <= max_length:
+                chunks.append(text)
+                break
+
+            # Try to split at a newline
+            split_pos = text.rfind("\n", 0, max_length)
+            if split_pos == -1 or split_pos < max_length // 2:
+                # No good newline, try space
+                split_pos = text.rfind(" ", 0, max_length)
+            if split_pos == -1 or split_pos < max_length // 2:
+                # No good space, force split
+                split_pos = max_length
+
+            chunks.append(text[:split_pos])
+            text = text[split_pos:].lstrip()
+
+        return chunks
 
     async def _on_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Handle incoming messages (text, photos, voice, documents)."""

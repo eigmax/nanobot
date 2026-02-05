@@ -1,5 +1,8 @@
 """Heartbeat service for periodic agent wake-ups."""
 
-from nanobot.heartbeat.service import HeartbeatService
+try:
+    from nanobot_rust import HeartbeatService
+except ImportError:
+    from nanobot.heartbeat._service_py import HeartbeatService
 
 __all__ = ["HeartbeatService"]

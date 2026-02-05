@@ -69,7 +69,7 @@ def onboard():
     console.print("     Get one at: https://openrouter.ai/keys")
     console.print('  2. Chat: [cyan]nanobot agent -m "Hello!"[/cyan]')
     console.print(
-        "\n[dim]Want Telegram/WhatsApp? See: https://github.com/HKUDS/nanobot#-chat-apps[/dim]"
+        "\n[dim]Want Telegram/WhatsApp? See: https://github.com/eigmax/nanobot#-chat-apps[/dim]"
     )
 
 
@@ -160,9 +160,8 @@ def gateway(
     from nanobot.bus import MessageBus
     from nanobot.channels.manager import ChannelManager
     from nanobot.config.loader import get_data_dir, load_config
-    from nanobot.cron.service import CronService
-    from nanobot.cron.types import CronJob
-    from nanobot.heartbeat.service import HeartbeatService
+    from nanobot.cron import CronJob, CronService
+    from nanobot.heartbeat import HeartbeatService
     from nanobot.providers.litellm_provider import LiteLLMProvider
 
     if verbose:
@@ -250,14 +249,16 @@ def gateway(
 
     async def run():
         try:
-            await cron.start()
-            await heartbeat.start()
+            # Run all services concurrently (they all have infinite loops)
             await asyncio.gather(
+                cron.start(),
+                heartbeat.start(),
                 agent.run(),
                 channels.start_all(),
             )
         except KeyboardInterrupt:
             console.print("\nShutting down...")
+        finally:
             heartbeat.stop()
             cron.stop()
             agent.stop()
@@ -455,7 +456,7 @@ def cron_list(
 ):
     """List scheduled jobs."""
     from nanobot.config.loader import get_data_dir
-    from nanobot.cron.service import CronService
+    from nanobot.cron import CronService
 
     store_path = get_data_dir() / "cron" / "jobs.json"
     service = CronService(store_path)
@@ -514,8 +515,7 @@ def cron_add(
 ):
     """Add a scheduled job."""
     from nanobot.config.loader import get_data_dir
-    from nanobot.cron.service import CronService
-    from nanobot.cron.types import CronSchedule
+    from nanobot.cron import CronSchedule, CronService
 
     # Determine schedule type
     if every:
@@ -552,7 +552,7 @@ def cron_remove(
 ):
     """Remove a scheduled job."""
     from nanobot.config.loader import get_data_dir
-    from nanobot.cron.service import CronService
+    from nanobot.cron import CronService
 
     store_path = get_data_dir() / "cron" / "jobs.json"
     service = CronService(store_path)
@@ -570,7 +570,7 @@ def cron_enable(
 ):
     """Enable or disable a job."""
     from nanobot.config.loader import get_data_dir
-    from nanobot.cron.service import CronService
+    from nanobot.cron import CronService
 
     store_path = get_data_dir() / "cron" / "jobs.json"
     service = CronService(store_path)
@@ -590,7 +590,7 @@ def cron_run(
 ):
     """Manually run a job."""
     from nanobot.config.loader import get_data_dir
-    from nanobot.cron.service import CronService
+    from nanobot.cron import CronService
 
     store_path = get_data_dir() / "cron" / "jobs.json"
     service = CronService(store_path)
