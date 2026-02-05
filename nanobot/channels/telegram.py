@@ -107,11 +107,7 @@ class TelegramChannel(BaseChannel):
         # Add message handler for text, photos, voice, documents
         self._app.add_handler(
             MessageHandler(
-                filters.TEXT
-                | filters.PHOTO
-                | filters.VOICE
-                | filters.AUDIO
-                | filters.Document.ALL,
+                filters.TEXT | filters.PHOTO | filters.VOICE | filters.AUDIO | filters.Document.ALL,
                 self._on_message,
             )
         )
