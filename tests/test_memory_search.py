@@ -1,7 +1,7 @@
 import tempfile
 from pathlib import Path
 
-from nanobot.agent.memory import search_memory, MemoryStore
+from debot.agent.memory import search_memory, MemoryStore
 
 
 def test_memory_search_builds_index_and_finds_results():

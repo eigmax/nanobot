@@ -6,7 +6,7 @@ from datetime import datetime
 
 import pytest
 
-from nanobot.agent.memory import MemoryStore
+from debot.agent.memory import MemoryStore
 
 
 class TestMemoryStore:
@@ -179,6 +179,6 @@ class TestPythonFallback:
 
     def test_fallback_import(self):
         """Test that Python fallback module can be imported."""
-        from nanobot.agent._memory_py import MemoryStore as PyMemoryStore
+        from debot.agent._memory_py import MemoryStore as PyMemoryStore
 
         assert PyMemoryStore is not None

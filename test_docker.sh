@@ -1,19 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IMAGE_NAME="nanobot-test"
+IMAGE_NAME="debot-test"
 
 echo "=== Building Docker image ==="
 docker build -t "$IMAGE_NAME" .
 
 echo ""
-echo "=== Running 'nanobot onboard' ==="
-docker run --name nanobot-test-run "$IMAGE_NAME" onboard
-
-echo ""
-echo "=== Running 'nanobot status' ==="
-STATUS_OUTPUT=$(docker commit nanobot-test-run nanobot-test-onboarded > /dev/null && \
-    docker run --rm nanobot-test-onboarded status 2>&1) || true
+echo "=== Running 'debot onboard' ===" 
+docker run --name debot-test-run "$IMAGE_NAME" onboard
+STATUS_OUTPUT=$(docker commit debot-test-run debot-test-onboarded > /dev/null && \
+    docker run --rm debot-test-onboarded status 2>&1) || true
 
 echo "$STATUS_OUTPUT"
 
@@ -30,7 +27,7 @@ check() {
     fi
 }
 
-check "nanobot Status"
+check "debot Status"
 check "Config:"
 check "Workspace:"
 check "Model:"
@@ -49,7 +46,7 @@ fi
 # Cleanup
 echo ""
 echo "=== Cleanup ==="
-docker rm -f nanobot-test-run 2>/dev/null || true
-docker rmi -f nanobot-test-onboarded 2>/dev/null || true
+docker rm -f debot-test-run 2>/dev/null || true
+docker rmi -f debot-test-onboarded 2>/dev/null || true
 docker rmi -f "$IMAGE_NAME" 2>/dev/null || true
 echo "Done."

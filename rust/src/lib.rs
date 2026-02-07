@@ -23,9 +23,9 @@ use tools::{
     WriteFileTool,
 };
 
-/// Rust implementation of nanobot core modules.
+/// Rust implementation of debot core modules.
 #[pymodule]
-fn nanobot_rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn debot_rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Message bus classes
     m.add_class::<InboundMessage>()?;
     m.add_class::<OutboundMessage>()?;

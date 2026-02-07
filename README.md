@@ -1,9 +1,9 @@
 <div align="center">
-  <img src="nanobot_logo.png" alt="nanobot" width="500">
-  <h1>nanobot: Ultra-Lightweight Personal AI Assistant</h1>
+  <img src="debot_logo.png" alt="debot" width="500">
+  <h1>debot: Ultra-Lightweight Personal AI Assistant</h1>
   <p>
-    <a href="https://pypi.org/project/nanobot-ai/"><img src="https://img.shields.io/pypi/v/nanobot-ai" alt="PyPI"></a>
-    <a href="https://pepy.tech/project/nanobot-ai"><img src="https://static.pepy.tech/badge/nanobot-ai" alt="Downloads"></a>
+    <a href="https://pypi.org/project/debot-ai/"><img src="https://img.shields.io/pypi/v/debot-ai" alt="PyPI"></a>
+    <a href="https://pepy.tech/project/debot-ai"><img src="https://static.pepy.tech/badge/debot-ai" alt="Downloads"></a>
     <img src="https://img.shields.io/badge/python-≥3.11-blue" alt="Python">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
     <a href="./COMMUNICATION.md"><img src="https://img.shields.io/badge/Feishu-Group-E9DBFC?style=flat&logo=feishu&logoColor=white" alt="Feishu"></a>
@@ -12,11 +12,11 @@
   </p>
 </div>
 
-🐈 **nanobot** is an **ultra-lightweight** personal AI assistant inspired by [Clawdbot](https://github.com/openclaw/openclaw) 
+🐈 **debot** is an **ultra-lightweight** personal AI assistant inspired by [Clawdbot](https://github.com/openclaw/openclaw) 
 
 ⚡️ Delivers core agent functionality in just **~4,000** lines of code — **99% smaller** than Clawdbot's 430k+ lines.
 
-## Key Features of nanobot:
+## Key Features of debot:
 
 🪶 **Ultra-Lightweight**: Just ~4,000 lines of code — 99% smaller than Clawdbot - core functionality.
 
@@ -39,7 +39,7 @@ If you need to specify a particular Python executable for maturin builds, set `P
 ## 🏗️ Architecture
 
 <p align="center">
-  <img src="nanobot_arch.png" alt="nanobot architecture" width="800">
+  <img src="debot_arch.png" alt="debot architecture" width="800">
 </p>
 
 ## ✨ Features
@@ -70,37 +70,37 @@ If you need to specify a particular Python executable for maturin builds, set `P
 **Install from source** (latest features, recommended for development)
 
 ```bash
-git clone https://github.com/BotMesh/nanobot.git
-cd nanobot
+git clone https://github.com/BotMesh/debot.git
+cd debot
 pip install -e .
 ```
 
 **Install with [uv](https://github.com/astral-sh/uv)** (stable, fast)
 
 ```bash
-uv tool install nanobot-ai
+uv tool install debot-ai
 ```
 
 **Install from PyPI** (stable)
 
 ```bash
-pip install nanobot-ai
+pip install debot-ai
 ```
 
 ## 🚀 Quick Start
 
 > [!TIP]
-> Set your API key in `~/.nanobot/config.json`.
+> Set your API key in `~/.debot/config.json`.
 > Get API keys: [OpenRouter](https://openrouter.ai/keys) (LLM) · [Brave Search](https://brave.com/search/api/) (optional, for web search)
 > You can also change the model to `minimax/minimax-m2` for lower cost.
 
 **1. Initialize**
 
 ```bash
-nanobot onboard
+debot onboard
 ```
 
-**2. Configure** (`~/.nanobot/config.json`)
+**2. Configure** (`~/.debot/config.json`)
 
 ```json
 {
@@ -124,14 +124,14 @@ nanobot onboard
 **3. Chat**
 
 ```bash
-nanobot agent -m "What is 2+2?"
+debot agent -m "What is 2+2?"
 ```
 
 That's it! You have a working AI assistant in 2 minutes.
 
 ## 🖥️ Local Models (vLLM)
 
-Run nanobot with your own local models using vLLM or any OpenAI-compatible server.
+Run debot with your own local models using vLLM or any OpenAI-compatible server.
 
 **1. Start your vLLM server**
 
@@ -139,7 +139,7 @@ Run nanobot with your own local models using vLLM or any OpenAI-compatible serve
 vllm serve meta-llama/Llama-3.1-8B-Instruct --port 8000
 ```
 
-**2. Configure** (`~/.nanobot/config.json`)
+**2. Configure** (`~/.debot/config.json`)
 
 ```json
 {
@@ -160,12 +160,12 @@ vllm serve meta-llama/Llama-3.1-8B-Instruct --port 8000
 **3. Chat**
 
 ```bash
-nanobot agent -m "Hello from my local LLM!"
+debot agent -m "Hello from my local LLM!"
 ```
 
 ## 💾 Session Compaction
 
-nanobot automatically compacts long conversations to keep context windows efficient. When a conversation exceeds ~90% of the model's context window, old messages are summarized into a single "compaction" entry.
+debot automatically compacts long conversations to keep context windows efficient. When a conversation exceeds ~90% of the model's context window, old messages are summarized into a single "compaction" entry.
 
 **Features:**
 - ✅ **Automatic** — Triggered silently when context limit approached
@@ -177,14 +177,14 @@ nanobot automatically compacts long conversations to keep context windows effici
 
 ```bash
 # Manual compaction via CLI
-nanobot sessions compact telegram:12345 --keep-last 50
+debot sessions compact telegram:12345 --keep-last 50
 
 # View/configure compaction settings
-nanobot config compaction --show
-nanobot config compaction --keep-last 30 --trigger-ratio 0.85
+debot config compaction --show
+debot config compaction --keep-last 30 --trigger-ratio 0.85
 
 # Per-model settings
-nanobot config compaction-model "anthropic/claude-opus-4-5" --keep-last 40
+debot config compaction-model "anthropic/claude-opus-4-5" --keep-last 40
 ```
 
 **Telegram:**
@@ -197,7 +197,7 @@ nanobot config compaction-model "anthropic/claude-opus-4-5" --keep-last 40
 
 ## 🧠 Long-term memory
 
-nanobot stores persistent memory under your workspace at `memory/` (by default your workspace is `~/.nanobot/workspace`). The memory system supports:
+debot stores persistent memory under your workspace at `memory/` (by default your workspace is `~/.debot/workspace`). The memory system supports:
 
 - `MEMORY.md` — long-term notes you want the agent to remember.
 - `YYYY-MM-DD.md` — daily notes.
@@ -205,7 +205,7 @@ nanobot stores persistent memory under your workspace at `memory/` (by default y
 
 How it works
 - The Rust extension (or the Python fallback) exposes `MemoryStore.build_index()` and `MemoryStore.search(query, max_results, min_score)` to build a local vector index and search it.
-- If `OPENAI_API_KEY` or `OPENROUTER_API_KEY` is set, nanobot will attempt to use the remote embeddings API and fall back to a deterministic local embedding when not available.
+- If `OPENAI_API_KEY` or `OPENROUTER_API_KEY` is set, debot will attempt to use the remote embeddings API and fall back to a deterministic local embedding when not available.
 
 Quick enable & usage
 
@@ -234,7 +234,7 @@ export OPENROUTER_API_KEY="or-..."
 
 ```python
 from pathlib import Path
-from nanobot.agent.memory import search_memory, MemoryStore
+from debot.agent.memory import search_memory, MemoryStore
 # Build index explicitly (if you've updated memory files)
 store = MemoryStore(ws)
 store.build_index()
@@ -257,7 +257,7 @@ Notes
 
 ## 💬 Chat Apps
 
-Talk to your nanobot through Telegram or WhatsApp — anytime, anywhere.
+Talk to your debot through Telegram or WhatsApp — anytime, anywhere.
 
 | Channel | Setup |
 |---------|-------|
@@ -291,7 +291,7 @@ Talk to your nanobot through Telegram or WhatsApp — anytime, anywhere.
 **3. Run**
 
 ```bash
-nanobot gateway
+debot gateway
 ```
 
 </details>
@@ -304,7 +304,7 @@ Requires **Node.js ≥18**.
 **1. Link device**
 
 ```bash
-nanobot channels login
+debot channels login
 # Scan QR with WhatsApp → Settings → Linked Devices
 ```
 
@@ -325,17 +325,17 @@ nanobot channels login
 
 ```bash
 # Terminal 1
-nanobot channels login
+debot channels login
 
 # Terminal 2
-nanobot gateway
+debot gateway
 ```
 
 </details>
 
 ## ⚙️ Configuration
 
-Config file: `~/.nanobot/config.json`
+Config file: `~/.debot/config.json`
 
 ### Providers
 
@@ -395,30 +395,30 @@ Config file: `~/.nanobot/config.json`
 
 | Command | Description |
 |---------|-------------|
-| `nanobot onboard` | Initialize config & workspace |
-| `nanobot agent -m "..."` | Chat with the agent |
-| `nanobot agent` | Interactive chat mode |
-| `nanobot gateway` | Start the gateway |
-| `nanobot status` | Show status |
-| `nanobot channels login` | Link WhatsApp (scan QR) |
-| `nanobot channels status` | Show channel status |
-| `nanobot sessions compact <key>` | Manually compact a session |
-| `nanobot config compaction` | View/configure compaction settings |
-| `nanobot config compaction-model <model>` | Set per-model compaction settings |
+| `debot onboard` | Initialize config & workspace |
+| `debot agent -m "..."` | Chat with the agent |
+| `debot agent` | Interactive chat mode |
+| `debot gateway` | Start the gateway |
+| `debot status` | Show status |
+| `debot channels login` | Link WhatsApp (scan QR) |
+| `debot channels status` | Show channel status |
+| `debot sessions compact <key>` | Manually compact a session |
+| `debot config compaction` | View/configure compaction settings |
+| `debot config compaction-model <model>` | Set per-model compaction settings |
 
 <details>
 <summary><b>Scheduled Tasks (Cron)</b></summary>
 
 ```bash
 # Add a job
-nanobot cron add --name "daily" --message "Good morning!" --cron "0 9 * * *"
-nanobot cron add --name "hourly" --message "Check status" --every 3600
+debot cron add --name "daily" --message "Good morning!" --cron "0 9 * * *"
+debot cron add --name "hourly" --message "Check status" --every 3600
 
 # List jobs
-nanobot cron list
+debot cron list
 
 # Remove a job
-nanobot cron remove <job_id>
+debot cron remove <job_id>
 ```
 
 </details>
@@ -426,28 +426,28 @@ nanobot cron remove <job_id>
 ## 🐳 Docker
 
 > [!TIP]
-> The `-v ~/.nanobot:/root/.nanobot` flag mounts your local config directory into the container, so your config and workspace persist across container restarts.
+> The `-v ~/.debot:/root/.debot` flag mounts your local config directory into the container, so your config and workspace persist across container restarts.
 
 ### Build & Run Locally
 
-Build and run nanobot in a container:
+Build and run debot in a container:
 
 ```bash
 # Build the image
-docker build -t nanobot .
+docker build -t debot .
 
 # Initialize config (first time only)
-docker run -v ~/.nanobot:/root/.nanobot --rm nanobot onboard
+docker run -v ~/.debot:/root/.debot --rm debot onboard
 
 # Edit config on host to add API keys
-vim ~/.nanobot/config.json
+vim ~/.debot/config.json
 
 # Run gateway (connects to Telegram/WhatsApp)
-docker run -v ~/.nanobot:/root/.nanobot -p 18790:18790 nanobot gateway
+docker run -v ~/.debot:/root/.debot -p 18790:18790 debot gateway
 
 # Or run a single command
-docker run -v ~/.nanobot:/root/.nanobot --rm nanobot agent -m "Hello!"
-docker run -v ~/.nanobot:/root/.nanobot --rm nanobot status
+docker run -v ~/.debot:/root/.debot --rm debot agent -m "Hello!"
+docker run -v ~/.debot:/root/.debot --rm debot status
 ```
 
 ### 📦 Pull from GitHub Container Registry
@@ -456,13 +456,13 @@ Pre-built images are automatically published to GitHub Container Registry:
 
 ```bash
 # Pull latest image
-docker pull ghcr.io/BotMesh/nanobot:latest
+docker pull ghcr.io/BotMesh/debot:latest
 
 # Run with pulled image
-docker run -v ~/.nanobot:/root/.nanobot -p 18790:18790 ghcr.io/BotMesh/nanobot:latest gateway
+docker run -v ~/.debot:/root/.debot -p 18790:18790 ghcr.io/BotMesh/debot:latest gateway
 
 # Pull specific version
-docker pull ghcr.io/BotMesh/nanobot:v1.0.0
+docker pull ghcr.io/BotMesh/debot:v1.0.0
 ```
 
 **Available Tags:**
@@ -478,7 +478,7 @@ For more info, see [Container Publishing Guide](./.github/CONTAINER_PUBLISHING.m
 
 PRs welcome! The codebase is intentionally small and readable. 🤗
 
-**Roadmap** — Pick an item and [open a PR](https://github.com/BotMesh/nanobot/pulls)!
+**Roadmap** — Pick an item and [open a PR](https://github.com/BotMesh/debot/pulls)!
 
 - [x] **Voice Transcription** — Support for Groq Whisper (Issue #13)
 - [ ] **Multi-modal** — See and hear (images, voice, video)
@@ -488,5 +488,5 @@ PRs welcome! The codebase is intentionally small and readable. 🤗
 - [ ] **Self-improvement** — Learn from feedback and mistakes
 
 <p align="center">
-  <sub>nanobot is for educational, research, and technical exchange purposes only</sub>
+  <sub>debot is for educational, research, and technical exchange purposes only</sub>
 </p>

@@ -5,7 +5,7 @@ import os
 import tempfile
 import pytest
 
-from nanobot.agent.tools import (
+from debot.agent.tools import (
     ToolRegistry,
     ReadFileTool,
     WriteFileTool,
@@ -314,10 +314,10 @@ class TestPythonFallback:
 
     def test_fallback_modules_exist(self):
         """Test that Python fallback modules can be imported."""
-        from nanobot.agent.tools._base_py import Tool
-        from nanobot.agent.tools._registry_py import ToolRegistry as PyRegistry
-        from nanobot.agent.tools._filesystem_py import ReadFileTool as PyReadFile
-        from nanobot.agent.tools._shell_py import ExecTool as PyExec
+        from debot.agent.tools._base_py import Tool
+        from debot.agent.tools._registry_py import ToolRegistry as PyRegistry
+        from debot.agent.tools._filesystem_py import ReadFileTool as PyReadFile
+        from debot.agent.tools._shell_py import ExecTool as PyExec
 
         assert Tool is not None
         assert PyRegistry is not None

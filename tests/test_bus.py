@@ -3,7 +3,7 @@
 import asyncio
 import pytest
 
-from nanobot.bus import MessageBus, InboundMessage, OutboundMessage
+from debot.bus import MessageBus, InboundMessage, OutboundMessage
 
 
 class TestInboundMessage:
@@ -257,9 +257,9 @@ class TestPythonFallback:
 
     def test_fallback_import(self):
         """Test that the Python fallback modules exist."""
-        from nanobot.bus._events_py import InboundMessage as PyInbound
-        from nanobot.bus._events_py import OutboundMessage as PyOutbound
-        from nanobot.bus._queue_py import MessageBus as PyBus
+        from debot.bus._events_py import InboundMessage as PyInbound
+        from debot.bus._events_py import OutboundMessage as PyOutbound
+        from debot.bus._queue_py import MessageBus as PyBus
 
         # Verify they work
         msg = PyInbound(

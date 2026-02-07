@@ -267,7 +267,7 @@ impl SessionManager {
             .ok_or_else(|| {
                 PyErr::new::<pyo3::exceptions::PyRuntimeError, _>("Cannot find home directory")
             })?
-            .join(".nanobot")
+            .join(".debot")
             .join("sessions");
 
         // Ensure directory exists

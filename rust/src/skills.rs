@@ -27,10 +27,10 @@ impl SkillsLoader {
     pub fn new(workspace: PathBuf, builtin_skills_dir: Option<PathBuf>) -> Self {
         let workspace_skills = workspace.join("skills");
 
-        // Default builtin skills directory - relative to nanobot package
+        // Default builtin skills directory - relative to debot package
         let builtin_skills = builtin_skills_dir.unwrap_or_else(|| {
             // Try to find the builtin skills directory
-            // This would be nanobot/skills relative to the package
+            // This would be debot/skills relative to the package
             PathBuf::from("")
         });
 
@@ -206,7 +206,7 @@ impl SkillsLoader {
 
             if let Some(meta) = self.get_skill_metadata(&name) {
                 let skill_meta =
-                    parse_nanobot_metadata(meta.get("metadata").cloned().as_deref().unwrap_or(""));
+                    parse_debot_metadata(meta.get("metadata").cloned().as_deref().unwrap_or(""));
                 if skill_meta
                     .get("always")
                     .map(|v| v == "true")
@@ -265,7 +265,7 @@ impl SkillsLoader {
     fn get_skill_meta(&self, name: &str) -> HashMap<String, String> {
         if let Some(meta) = self.get_skill_metadata(name) {
             if let Some(metadata_str) = meta.get("metadata") {
-                return parse_nanobot_metadata(metadata_str);
+                return parse_debot_metadata(metadata_str);
             }
         }
         HashMap::new()
@@ -334,13 +334,13 @@ fn strip_frontmatter(content: &str) -> String {
     content.to_string()
 }
 
-/// Parse nanobot metadata JSON from frontmatter.
-fn parse_nanobot_metadata(raw: &str) -> HashMap<String, String> {
+/// Parse debot metadata JSON from frontmatter.
+fn parse_debot_metadata(raw: &str) -> HashMap<String, String> {
     let mut result = HashMap::new();
 
     // Try to parse as JSON
     if let Ok(value) = serde_json::from_str::<serde_json::Value>(raw) {
-        if let Some(obj) = value.get("nanobot").and_then(|v| v.as_object()) {
+        if let Some(obj) = value.get("debot").and_then(|v| v.as_object()) {
             for (k, v) in obj {
                 if let Some(s) = v.as_str() {
                     result.insert(k.clone(), s.to_string());

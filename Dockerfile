@@ -27,7 +27,7 @@ RUN apt-get update && \
     . $HOME/.cargo/env
 
 # Create placeholder Python package
-RUN mkdir -p nanobot bridge && touch nanobot/__init__.py
+RUN mkdir -p debot bridge && touch debot/__init__.py
 
 # Install Python dependencies with Rust extension
 ENV PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1
@@ -35,7 +35,7 @@ RUN . $HOME/.cargo/env && \
     uv pip install --system --no-cache .
 
 # Copy the full source code
-COPY nanobot/ nanobot/
+COPY debot/ debot/
 COPY bridge/ bridge/
 
 # Build the WhatsApp bridge
@@ -44,10 +44,10 @@ RUN npm install && npm run build
 WORKDIR /app
 
 # Create config directory
-RUN mkdir -p /root/.nanobot
+RUN mkdir -p /root/.debot
 
 # Gateway default port
 EXPOSE 18790
 
-ENTRYPOINT ["nanobot"]
+ENTRYPOINT ["debot"]
 CMD ["status"]

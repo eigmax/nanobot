@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from nanobot.session import Session, SessionManager
+from debot.session import Session, SessionManager
 
 
 def unique_key(prefix: str = "test") -> str:
@@ -206,8 +206,8 @@ class TestPythonFallback:
 
     def test_fallback_import(self):
         """Test that Python fallback modules can be imported."""
-        from nanobot.session._manager_py import Session as PySession
-        from nanobot.session._manager_py import SessionManager as PySessionManager
+        from debot.session._manager_py import Session as PySession
+        from debot.session._manager_py import SessionManager as PySessionManager
 
         assert PySession is not None
         assert PySessionManager is not None

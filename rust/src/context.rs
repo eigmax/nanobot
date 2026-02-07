@@ -181,9 +181,9 @@ impl ContextBuilder {
             .to_string();
 
         format!(
-            r#"# nanobot 🐈
+            r#"# debot 🐈
 
-You are nanobot, a helpful AI assistant. You have access to tools that allow you to:
+You are debot, a helpful AI assistant. You have access to tools that allow you to:
 - Read, write, and edit files
 - Execute shell commands
 - Search the web and fetch web pages

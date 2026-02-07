@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from nanobot.agent.context import ContextBuilder
-from nanobot.agent.skills import SkillsLoader
+from debot.agent.context import ContextBuilder
+from debot.agent.skills import SkillsLoader
 
 
 class TestContextBuilder:
@@ -35,7 +35,7 @@ class TestContextBuilder:
     def test_build_system_prompt(self, builder):
         """Test building system prompt."""
         prompt = builder.build_system_prompt()
-        assert "nanobot" in prompt
+        assert "debot" in prompt
         assert "workspace" in prompt.lower()
 
     def test_build_system_prompt_includes_time(self, builder):
@@ -235,12 +235,12 @@ class TestPythonFallback:
 
     def test_context_fallback_import(self):
         """Test that Python context fallback can be imported."""
-        from nanobot.agent._context_py import ContextBuilder as PyContextBuilder
+        from debot.agent._context_py import ContextBuilder as PyContextBuilder
 
         assert PyContextBuilder is not None
 
     def test_skills_fallback_import(self):
         """Test that Python skills fallback can be imported."""
-        from nanobot.agent._skills_py import SkillsLoader as PySkillsLoader
+        from debot.agent._skills_py import SkillsLoader as PySkillsLoader
 
         assert PySkillsLoader is not None

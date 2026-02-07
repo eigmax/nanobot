@@ -81,14 +81,14 @@ Compaction behavior can be configured globally or per-model:
 
 ### Global Config
 ```bash
-nanobot config compaction --show
-nanobot config compaction --enabled --keep-last 50 --trigger-ratio 0.9
+debot config compaction --show
+debot config compaction --enabled --keep-last 50 --trigger-ratio 0.9
 ```
 
 ### Per-Model Config
 ```bash
-nanobot config compaction-model "anthropic/claude-opus-4-5" --keep-last 40
-nanobot config compaction-model "openai/gpt-4" --trigger-ratio 0.85
+debot config compaction-model "anthropic/claude-opus-4-5" --keep-last 40
+debot config compaction-model "openai/gpt-4" --trigger-ratio 0.85
 ```
 
 ### Telegram Auto-Compaction
@@ -114,7 +114,7 @@ Each session maintains compaction telemetry in its metadata:
 
 View session statistics programmatically:
 ```python
-from nanobot.session import SessionManager
+from debot.session import SessionManager
 sm = SessionManager(workspace_path)
 session = sm.get_or_create("telegram:12345")
 print(session.metadata.get('compactions'))
@@ -136,6 +136,6 @@ The session doesn't exist yet. Send a regular message first to create the sessio
 Your conversation is short (fewer messages than keep_last parameter). The compaction has nothing to do.
 
 ### Bot doesn't respond to `/compact`
-- Ensure bot is running: `nanobot gateway`
-- Check Telegram token is configured: `nanobot channels status`
+- Ensure bot is running: `debot gateway`
+- Check Telegram token is configured: `debot channels status`
 - Verify you're in an allowed chat (if allowlist is set in config)

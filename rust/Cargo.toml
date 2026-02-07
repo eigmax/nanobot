@@ -1,10 +1,10 @@
 [package]
-name = "nanobot_rust"
+name = "debot_rust"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "nanobot_rust"
+name = "debot_rust"
 crate-type = ["cdylib"]
 
 [dependencies]
