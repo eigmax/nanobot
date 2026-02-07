@@ -12,10 +12,7 @@ class TestInboundMessage:
     def test_basic_creation(self):
         """Test creating an InboundMessage with required fields."""
         msg = InboundMessage(
-            channel="telegram",
-            sender_id="user123",
-            chat_id="chat456",
-            content="Hello World!"
+            channel="telegram", sender_id="user123", chat_id="chat456", content="Hello World!"
         )
         assert msg.channel == "telegram"
         assert msg.sender_id == "user123"
@@ -24,22 +21,12 @@ class TestInboundMessage:
 
     def test_session_key(self):
         """Test session_key property."""
-        msg = InboundMessage(
-            channel="whatsapp",
-            sender_id="user1",
-            chat_id="chat1",
-            content="test"
-        )
+        msg = InboundMessage(channel="whatsapp", sender_id="user1", chat_id="chat1", content="test")
         assert msg.session_key == "whatsapp:chat1"
 
     def test_timestamp_auto_generated(self):
         """Test that timestamp is automatically generated."""
-        msg = InboundMessage(
-            channel="telegram",
-            sender_id="user1",
-            chat_id="chat1",
-            content="test"
-        )
+        msg = InboundMessage(channel="telegram", sender_id="user1", chat_id="chat1", content="test")
         assert msg.timestamp > 0
 
     def test_custom_timestamp(self):
@@ -49,7 +36,7 @@ class TestInboundMessage:
             sender_id="user1",
             chat_id="chat1",
             content="test",
-            timestamp=1234567890.0
+            timestamp=1234567890.0,
         )
         assert msg.timestamp == 1234567890.0
 
@@ -60,7 +47,7 @@ class TestInboundMessage:
             sender_id="user1",
             chat_id="chat1",
             content="test",
-            media=["https://example.com/image.png", "https://example.com/file.pdf"]
+            media=["https://example.com/image.png", "https://example.com/file.pdf"],
         )
         assert len(msg.media) == 2
         assert msg.media[0] == "https://example.com/image.png"
@@ -72,7 +59,7 @@ class TestInboundMessage:
             sender_id="user1",
             chat_id="chat1",
             content="test",
-            metadata={"key1": "value1", "count": 42}
+            metadata={"key1": "value1", "count": 42},
         )
         assert msg.metadata["key1"] == "value1"
         assert msg.metadata["count"] == 42
@@ -80,10 +67,7 @@ class TestInboundMessage:
     def test_mutable_fields(self):
         """Test that fields can be modified."""
         msg = InboundMessage(
-            channel="telegram",
-            sender_id="user1",
-            chat_id="chat1",
-            content="original"
+            channel="telegram", sender_id="user1", chat_id="chat1", content="original"
         )
         msg.content = "modified"
         msg.channel = "whatsapp"
@@ -96,11 +80,7 @@ class TestOutboundMessage:
 
     def test_basic_creation(self):
         """Test creating an OutboundMessage with required fields."""
-        msg = OutboundMessage(
-            channel="telegram",
-            chat_id="chat456",
-            content="Response!"
-        )
+        msg = OutboundMessage(channel="telegram", chat_id="chat456", content="Response!")
         assert msg.channel == "telegram"
         assert msg.chat_id == "chat456"
         assert msg.content == "Response!"
@@ -109,10 +89,7 @@ class TestOutboundMessage:
     def test_reply_to(self):
         """Test reply_to field."""
         msg = OutboundMessage(
-            channel="telegram",
-            chat_id="chat456",
-            content="Response!",
-            reply_to="msg123"
+            channel="telegram", chat_id="chat456", content="Response!", reply_to="msg123"
         )
         assert msg.reply_to == "msg123"
 
@@ -122,17 +99,14 @@ class TestOutboundMessage:
             channel="telegram",
             chat_id="chat456",
             content="test",
-            media=["https://example.com/image.png"]
+            media=["https://example.com/image.png"],
         )
         assert len(msg.media) == 1
 
     def test_metadata_dict(self):
         """Test metadata field."""
         msg = OutboundMessage(
-            channel="telegram",
-            chat_id="chat456",
-            content="test",
-            metadata={"sent": True}
+            channel="telegram", chat_id="chat456", content="test", metadata={"sent": True}
         )
         assert msg.metadata["sent"] is True
 
@@ -148,12 +122,7 @@ class TestMessageBus:
     @pytest.mark.asyncio
     async def test_publish_consume_inbound(self, bus):
         """Test basic inbound publish/consume cycle."""
-        msg = InboundMessage(
-            channel="test",
-            sender_id="user1",
-            chat_id="chat1",
-            content="Hello"
-        )
+        msg = InboundMessage(channel="test", sender_id="user1", chat_id="chat1", content="Hello")
         await bus.publish_inbound(msg)
         assert bus.inbound_size == 1
 
@@ -164,11 +133,7 @@ class TestMessageBus:
     @pytest.mark.asyncio
     async def test_publish_consume_outbound(self, bus):
         """Test basic outbound publish/consume cycle."""
-        msg = OutboundMessage(
-            channel="test",
-            chat_id="chat1",
-            content="Response"
-        )
+        msg = OutboundMessage(channel="test", chat_id="chat1", content="Response")
         await bus.publish_outbound(msg)
         assert bus.outbound_size == 1
 
@@ -181,10 +146,7 @@ class TestMessageBus:
         """Test that messages are consumed in FIFO order."""
         for i in range(5):
             msg = InboundMessage(
-                channel="test",
-                sender_id="user1",
-                chat_id="chat1",
-                content=f"Message {i}"
+                channel="test", sender_id="user1", chat_id="chat1", content=f"Message {i}"
             )
             await bus.publish_inbound(msg)
 
@@ -199,13 +161,11 @@ class TestMessageBus:
     @pytest.mark.asyncio
     async def test_consume_blocks_until_message(self, bus):
         """Test that consume blocks until a message is available."""
+
         async def publish_after_delay():
             await asyncio.sleep(0.1)
             msg = InboundMessage(
-                channel="test",
-                sender_id="user1",
-                chat_id="chat1",
-                content="Delayed"
+                channel="test", sender_id="user1", chat_id="chat1", content="Delayed"
             )
             await bus.publish_inbound(msg)
 
@@ -238,7 +198,7 @@ class TestMessageBus:
             chat_id="chat456",
             content="Full message",
             media=["https://example.com/img.png"],
-            metadata={"key": "value", "num": 42}
+            metadata={"key": "value", "num": 42},
         )
         await bus.publish_inbound(original)
         result = await asyncio.wait_for(bus.consume_inbound(), timeout=1.0)
@@ -262,10 +222,5 @@ class TestPythonFallback:
         from debot.bus._queue_py import MessageBus as PyBus
 
         # Verify they work
-        msg = PyInbound(
-            channel="test",
-            sender_id="user1",
-            chat_id="chat1",
-            content="test"
-        )
+        msg = PyInbound(channel="test", sender_id="user1", chat_id="chat1", content="test")
         assert msg.content == "test"

@@ -25,7 +25,7 @@ class TestReadFileTool:
     @pytest.mark.asyncio
     async def test_read_existing_file(self, tool):
         """Test reading an existing file."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as f:
             f.write("Hello, World!")
             f.flush()
             path = f.name
@@ -95,7 +95,7 @@ class TestEditFileTool:
     @pytest.mark.asyncio
     async def test_edit_file(self, tool):
         """Test editing a file."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as f:
             f.write("Hello, World!")
             f.flush()
             path = f.name
@@ -112,7 +112,7 @@ class TestEditFileTool:
     @pytest.mark.asyncio
     async def test_edit_text_not_found(self, tool):
         """Test editing when old_text is not found."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as f:
             f.write("Hello, World!")
             f.flush()
             path = f.name
@@ -126,7 +126,7 @@ class TestEditFileTool:
     @pytest.mark.asyncio
     async def test_edit_multiple_occurrences(self, tool):
         """Test editing when old_text appears multiple times."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as f:
             f.write("foo bar foo")
             f.flush()
             path = f.name
@@ -158,7 +158,7 @@ class TestListDirTool:
         with tempfile.TemporaryDirectory() as tmpdir:
             # Create some files and directories
             os.makedirs(os.path.join(tmpdir, "subdir"))
-            open(os.path.join(tmpdir, "file.txt"), 'w').close()
+            open(os.path.join(tmpdir, "file.txt"), "w").close()
 
             result = await tool.execute(tmpdir)
             assert "file.txt" in result
@@ -268,7 +268,7 @@ class TestToolRegistry:
         """Test executing a tool via registry."""
         registry.register(ReadFileTool())
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as f:
             f.write("Registry test")
             f.flush()
             path = f.name

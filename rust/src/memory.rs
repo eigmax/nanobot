@@ -264,7 +264,7 @@ impl MemoryStore {
         max_results: usize,
         min_score: f32,
     ) -> PyResult<Py<PyList>> {
-        #[warn(unused_mut)]
+        #[allow(unused_mut)]
         let mut result = PyList::empty(py);
 
         if !self.index_file.exists() {

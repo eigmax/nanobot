@@ -29,4 +29,6 @@ def test_memory_search_builds_index_and_finds_results():
         results = search_memory(ws, "deploy production", max_results=3)
         assert isinstance(results, list)
         assert len(results) > 0
-        assert any("deploy" in r["snippet"].lower() or "deployed" in r["snippet"].lower() for r in results)
+        assert any(
+            "deploy" in r["snippet"].lower() or "deployed" in r["snippet"].lower() for r in results
+        )

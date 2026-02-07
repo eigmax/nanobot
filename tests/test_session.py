@@ -152,7 +152,9 @@ class TestSessionManager:
         manager.save(session)
 
         # Create new manager to clear cache
-        new_manager = SessionManager(manager.workspace if hasattr(manager, 'workspace') else Path.home())
+        new_manager = SessionManager(
+            manager.workspace if hasattr(manager, "workspace") else Path.home()
+        )
         loaded = new_manager.get_or_create(key)
 
         assert len(loaded.messages) == 2

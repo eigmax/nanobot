@@ -209,7 +209,9 @@ class TestSkillsLoader:
         """Test getting skill metadata from frontmatter."""
         skill_dir = temp_workspace / "skills" / "meta-skill"
         skill_dir.mkdir()
-        (skill_dir / "SKILL.md").write_text("---\ndescription: My description\nauthor: Test\n---\n# Content")
+        (skill_dir / "SKILL.md").write_text(
+            "---\ndescription: My description\nauthor: Test\n---\n# Content"
+        )
 
         loader = SkillsLoader(temp_workspace)
         meta = loader.get_skill_metadata("meta-skill")
