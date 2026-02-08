@@ -1,9 +1,9 @@
 [project]
 name = "debot"
-version = "0.1.0"
-description = "A lightweight personal AI assistant framework"
+version = "0.1.1"
+description = "A lightweight and secure personal AI assistant framework"
 requires-python = ">=3.11"
-license = {text = "MIT"}
+license = {file = "LICENSE"}
 authors = [
     {name = "debot contributors"}
 ]
@@ -56,6 +56,7 @@ include = [
     "debot/skills/**/*.md",
     "debot/skills/**/*.sh",
     "bridge/**/*",
+    "LICENSE",
 ]
 
 [tool.ruff]
